@@ -133,7 +133,7 @@
         }
 
         .melissa-color {
-            background: linear-gradient(135deg, #d4b5da 0%, #c49dd1 100%);
+            background: linear-gradient(135deg, #ff9f5a 0%, #f57c47 100%);
         }
 
         .calendars {
@@ -253,12 +253,41 @@
         }
 
         .day.melissa {
-            background: linear-gradient(135deg, #d4b5da 0%, #c49dd1 100%);
+            background: linear-gradient(135deg, #ff9f5a 0%, #f57c47 100%);
         }
 
         .day.multi {
             background: linear-gradient(135deg, #c8a8ea 0%, #a87bd9 100%);
             position: relative;
+        }
+
+        .day.all-available {
+            border-radius: 0;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%) !important;
+            box-shadow:
+                inset -2px -2px 5px rgba(0,0,0,0.2),
+                inset 2px 2px 5px rgba(255,255,255,0.5),
+                0 0 10px rgba(255,215,0,0.6),
+                0 0 20px rgba(255,215,0,0.4);
+            animation: glitter 1.5s ease-in-out infinite;
+        }
+
+        @keyframes glitter {
+            0%, 100% {
+                box-shadow:
+                    inset -2px -2px 5px rgba(0,0,0,0.2),
+                    inset 2px 2px 5px rgba(255,255,255,0.5),
+                    0 0 10px rgba(255,215,0,0.6),
+                    0 0 20px rgba(255,215,0,0.4);
+            }
+            50% {
+                box-shadow:
+                    inset -2px -2px 5px rgba(0,0,0,0.2),
+                    inset 2px 2px 5px rgba(255,255,255,0.7),
+                    0 0 15px rgba(255,215,0,0.8),
+                    0 0 30px rgba(255,215,0,0.6);
+            }
         }
 
 
@@ -701,7 +730,11 @@
                     let dayContent = day;
                     let namesData = '';
 
-                    if (selectedAvailable.length > 1) {
+                    if (selectedAvailable.length === selectedPeople.size && selectedPeople.size > 0) {
+                        dayClass += ' available all-available';
+                        dayContent = selectedAvailable.length;
+                        namesData = `data-names="${selectedAvailable.join(', ')}"`;
+                    } else if (selectedAvailable.length > 1) {
                         dayClass += ' available multi';
                         dayContent = selectedAvailable.length;
                         namesData = `data-names="${selectedAvailable.join(', ')}"`;
