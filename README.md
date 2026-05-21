@@ -1,24 +1,42 @@
 # Shared Availability Calendar
 
-A visual calendar showing shared availability across multiple people for May–August 2026.
+A visual, interactive calendar showing shared availability across multiple people for May–August 2026.
+
+## Features
+
+- **Color-coded days** — Each person has a unique color gradient
+- **Interactive filtering** — Check/uncheck names in the legend to show/hide their availability
+- **Overlap highlighting** — Days when all selected people are available show a glittery gold background with a sparkle ✨
+- **Multi-person dates** — Days with 2+ people show a count in magenta-purple
+- **Click for tooltips** — Click any colored day to see who is available
 
 ## How It Works
 
-The calendar reads availability data from a JavaScript object and automatically generates color-coded calendar views. Days are color-coded by person, and days when multiple people are available show combined initials in purple.
+The calendar reads availability data from a JavaScript object in `index.html` and automatically generates color-coded calendar views. Each person has a distinct color, and overlapping availability is highlighted.
+
+## Current People
+
+- **ANNA** — Magenta-Purple
+- **Emily** — Pink
+- **jenn** — Cyan
+- **Jenna** — Teal
+- **AK** — Red
+- **Melissa** — Green
+- **Amy** — Orange
 
 ## Adding a New Person's Availability
 
-1. Open `availability-calendar.html` in a text editor
-2. Find the `availability` object:
+1. Open `index.html` in a text editor
+2. Find the `availability` object in the `<script>` section:
    ```javascript
    const availability = {
        ANNA: { ... },
        Emily: { ... },
-       jenn: { ... }
+       // ... other people
    };
    ```
 
-3. Add a new person by inserting a new entry. Follow this format:
+3. Add a new person's availability data:
    ```javascript
    YourName: {
        5: [23, 24, 25],  // May dates
@@ -28,34 +46,55 @@ The calendar reads availability data from a JavaScript object and automatically 
    }
    ```
 
-4. Add a color style in the CSS section. Pick a gradient pair:
+4. Add a color style for the day in the CSS section:
+   ```css
+   .day.available.yourname {
+       background: linear-gradient(135deg, #startColor 0%, #endColor 100%);
+       border: 1px solid #darkColor;
+   }
+   ```
+
+5. Add a matching legend color style:
    ```css
    .yourname-color {
-       background: linear-gradient(135deg, #color1 0%, #color2 100%);
-   }
-   ```
-   Example color gradients: `#e8b4d1` to `#d492b8`, `#a8d8ea` to `#7fc8d9`, `#f4d89f` to `#ecc881`
-
-5. Add a day style:
-   ```css
-   .day.yourname {
-       background: linear-gradient(135deg, #color1 0%, #color2 100%);
+       background: linear-gradient(135deg, #startColor 0%, #endColor 100%);
    }
    ```
 
-6. Add the person to the legend:
+6. Add the person to the legend in the HTML:
    ```html
-   <div class="legend-item">
+   <div class="legend-item" data-person="YourName">
+       <input type="checkbox" class="person-checkbox" checked>
        <div class="legend-color yourname-color">Y</div>
        <span>Your Name</span>
    </div>
    ```
 
-7. Save and refresh the browser to see the changes.
+7. Update the `getClassNameFromPerson()` function:
+   ```javascript
+   const classMap = {
+       'ANNA': 'anna',
+       'Emily': 'emily',
+       // ... add:
+       'YourName': 'yourname'
+   };
+   ```
+
+8. Update the `getAbbrFromPerson()` function:
+   ```javascript
+   const abbrMap = {
+       'ANNA': 'A',
+       'Emily': 'E',
+       // ... add:
+       'YourName': 'Y'
+   };
+   ```
+
+9. Save and refresh the browser to see the changes.
 
 ## Editing Someone's Availability
 
-1. Open `availability-calendar.html` in a text editor
+1. Open `index.html` in a text editor
 2. Find the `availability` object and locate the person you want to edit
 3. Update the date arrays for any month:
    - **Add dates**: Insert the day number into the array (e.g., `5: [23, 24, 25, 30]`)
@@ -64,27 +103,16 @@ The calendar reads availability data from a JavaScript object and automatically 
 
 4. Save and refresh the browser to see the updated calendar
 
-## Example: Adding "Charlie"
+## Special Display States
 
-```javascript
-const availability = {
-    ANNA: { ... },
-    Emily: { ... },
-    jenn: { ... },
-    Charlie: {
-        5: [1, 2, 8, 9],
-        6: [15, 16, 22, 23],
-        7: [6, 7, 13, 14, 20, 21, 27, 28],
-        8: [3, 4, 10, 11]
-    }
-};
-```
-
-Then add CSS and legend entries as shown above.
+- **Single person**: Shows person's color with their initial/abbreviation
+- **Multiple people (2+)**: Shows count in magenta-purple
+- **All selected people available**: Shows sparkle ✨ with glittery gold background and count
 
 ## Notes
 
-- The calendar automatically handles overlapping availability (2+ people on same day)
-- Days with multiple people show combined initials in purple with a star
-- The HTML/CSS/JS is all in one file for easy sharing and editing
+- The calendar automatically handles overlapping availability
+- Filter using the interactive legend to show specific people
+- All HTML/CSS/JS is in one file (`index.html`) for easy sharing
 - Month data is based on 2026 calendar dates
+- Dates are specified as day numbers (1–31)
